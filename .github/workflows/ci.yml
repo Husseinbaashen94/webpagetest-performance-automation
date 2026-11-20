@@ -1,0 +1,50 @@
+name: Web Performance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1' # weekly lab run, Monday 04:00 UTC
+
+jobs:
+  checks:
+    name: Unit + API contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx playwright test --project=unit --project=contract
+
+  performance:
+    name: Performance budgets (WebPageTest)
+    # Live runs use API credits: only on schedule or manual trigger, never on every push.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run budgets
+        env:
+          WPT_API_KEY: ${{ secrets.WPT_API_KEY }}
+        run: npx playwright test --project=performance
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report
+          path: playwright-report
+          retention-days: 30

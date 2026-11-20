@@ -1,0 +1,26 @@
+{
+  "name": "webpagetest-performance-automation",
+  "version": "1.0.0",
+  "description": "Automated web performance budgets with the WebPageTest API, Playwright Test and TypeScript",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:contract": "playwright test --project=contract",
+    "test:unit": "playwright test --project=unit",
+    "test:perf": "playwright test --project=performance",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.7"
+  }
+}

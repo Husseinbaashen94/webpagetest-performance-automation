@@ -1,0 +1,24 @@
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  forbidOnly: !!process.env.CI,
+  reporter: [['html', { open: 'never' }], ['list']],
+  use: {
+    baseURL: process.env.WPT_BASE_URL ?? 'https://www.webpagetest.org',
+    extraHTTPHeaders: { 'User-Agent': 'wpt-performance-automation' },
+  },
+  projects: [
+    // No key, no network calls: the budget logic itself.
+    { name: 'unit', testDir: './tests/unit' },
+    // No key needed: checks the public API still matches what the client expects.
+    { name: 'contract', testDir: './tests/contract' },
+    // Needs WPT_API_KEY: real lab tests against each page in budgets.json.
+    {
+      name: 'performance',
+      testDir: './tests/performance',
+      timeout: 15 * 60_000,
+      // Each page is an independent WebPageTest run; run them side by side.
+      fullyParallel: true,
+    },
+  ],
+});

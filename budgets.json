@@ -1,0 +1,24 @@
+{
+  "$comment": "Pages to audit and their performance budgets. Timings in ms, totalKB in kilobytes. Edit freely.",
+  "pages": [
+    {
+      "name": "Sauce Demo login (desktop)",
+      "url": "https://www.saucedemo.com/",
+      "location": "IAD_US_01:Chrome.Cable",
+      "budget": { "ttfb": 800, "fcp": 1800, "lcp": 2500, "cls": 0.1, "tbt": 200, "speedIndex": 3400, "totalKB": 1500, "requests": 40 }
+    },
+    {
+      "name": "Sauce Demo login (mobile 4G)",
+      "url": "https://www.saucedemo.com/",
+      "location": "IAD_US_01:Chrome.4G",
+      "mobile": true,
+      "budget": { "ttfb": 1200, "fcp": 3000, "lcp": 4000, "cls": 0.1, "tbt": 600, "speedIndex": 5800 }
+    },
+    {
+      "name": "QuickPizza home (desktop)",
+      "url": "https://quickpizza.grafana.com/",
+      "location": "IAD_US_01:Chrome.Cable",
+      "budget": { "ttfb": 800, "fcp": 1800, "lcp": 2500, "cls": 0.1, "tbt": 200, "speedIndex": 3400 }
+    }
+  ]
+}

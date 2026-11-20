@@ -1,0 +1,12 @@
+{
+  "$comment": "Synthetic first-view median shaped like a WebPageTest jsonResult.php response (data.median.firstView). Used by unit tests only.",
+  "TTFB": 412,
+  "firstContentfulPaint": 1350,
+  "SpeedIndex": 1820,
+  "TotalBlockingTime": 140,
+  "chromeUserTiming.LargestContentfulPaint": 2210,
+  "chromeUserTiming.CumulativeLayoutShift": 0.034,
+  "bytesIn": 942080,
+  "requestsFull": 23,
+  "fullyLoaded": 3120
+}
