@@ -44,6 +44,8 @@ budgets.json ──► WptClient.runTest() ──► poll testStatus ──► j
 
 Live runs use WebPageTest API credits, so CI only runs them on a schedule or manual trigger, never on every push.
 
+WebPageTest's bot protection sometimes blocks cloud CI runners with a `403` "Security Verification" page. The contract tests detect that page and **skip with an explicit reason** rather than fail, since it isn't an API change. Run `npm run test:contract` locally to check the contract from a normal connection.
+
 ## Getting started
 
 ### 1. Prerequisites
