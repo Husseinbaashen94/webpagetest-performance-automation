@@ -1,10 +1,14 @@
+import { existsSync } from 'node:fs';
 import { defineConfig } from '@playwright/test';
+
+// Local settings, including WPT_API_KEY: copy .env.example to .env. Empty values fall back to the defaults.
+if (existsSync('.env')) process.loadEnvFile('.env');
 
 export default defineConfig({
   forbidOnly: !!process.env.CI,
   reporter: [['html', { open: 'never' }], ['list']],
   use: {
-    baseURL: process.env.WPT_BASE_URL ?? 'https://www.webpagetest.org',
+    baseURL: process.env.WPT_BASE_URL || 'https://www.webpagetest.org',
     extraHTTPHeaders: { 'User-Agent': 'wpt-performance-automation' },
   },
   projects: [

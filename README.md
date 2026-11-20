@@ -44,21 +44,65 @@ budgets.json ──► WptClient.runTest() ──► poll testStatus ──► j
 
 Live runs use WebPageTest API credits, so CI only runs them on a schedule or manual trigger, never on every push.
 
-## Run it
+## Getting started
 
-Requires Node.js 18+.
+### 1. Prerequisites
+
+| Tool | Version | Check | Install |
+|------|---------|-------|---------|
+| Node.js | 20.12 or newer (22 LTS recommended) | `node -v` | [nodejs.org](https://nodejs.org/) |
+| Git | any recent | `git --version` | [git-scm.com](https://git-scm.com/downloads) |
+
+For the live performance tests you also need a **WebPageTest API key**. Get one at [webpagetest.org/signup](https://www.webpagetest.org/signup). The unit and contract tests run without it.
+
+### 2. Clone and install
 
 ```bash
+git clone https://github.com/Husseinbaashen94/webpagetest-performance-automation.git
+cd webpagetest-performance-automation
 npm install
-npm run test:unit          # no key needed
-npm run test:contract      # no key needed
-
-# Live performance runs: get a key at https://www.webpagetest.org/signup
-WPT_API_KEY=your-key npm run test:perf
-WPT_API_KEY=your-key WPT_RUNS=5 npm run test:perf    # more runs = steadier medians
 ```
 
-For CI, add the key as a repository secret named `WPT_API_KEY`. The key is sent in the `X-WPT-API-KEY` header and never in a URL, so it can't leak into logs or reports.
+### 3. Configure (optional)
+
+Everything works out of the box. To change a setting, copy the template and fill in only what you need:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose and default |
+|----------|---------------------|
+| `WPT_API_KEY` | **Your WebPageTest API key.** Needed only for `npm run test:perf`. Without it those tests are skipped |
+| `WPT_RUNS` | Runs per page; the median is used. Default `3` |
+| `WPT_BASE_URL` | WebPageTest server. Default `https://www.webpagetest.org` |
+
+Empty values use the default. `.env` is git-ignored, so nothing you put in it is ever committed.
+
+### 4. Run the tests
+
+```bash
+npm run test:unit        # budget logic, no key, no network
+npm run test:contract    # checks the public API shape, no key
+npm run test:perf        # live lab tests for every page in budgets.json (needs WPT_API_KEY)
+npm test                 # all of the above
+```
+
+To audit different pages, edit `budgets.json`. Each entry has a `name`, `url`, `location` and the `budget` limits.
+
+**In CI:** add your key under *Settings → Secrets and variables → Actions* as a repository secret named `WPT_API_KEY`.
+
+### 5. View the report
+
+Run `npm run report`. Each page's test has a Markdown table of actual vs budget plus a link to the full WebPageTest result. In CI, the same table appears in the job summary.
+
+### Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Performance tests show as *skipped* | `WPT_API_KEY` isn't set. Add it to `.env` |
+| `did not finish within 600s` | WebPageTest's queue is busy; re-run later or lower `WPT_RUNS` |
+| Contract test fails on a location | That test agent was retired: pick another id from `https://www.webpagetest.org/getLocations.php?f=json` |
 
 ## Project structure
 

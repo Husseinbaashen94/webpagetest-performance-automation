@@ -9,7 +9,7 @@ import { evaluateBudget, formatResults, type PageBudget } from '../../src/budget
 import budgets from '../../budgets.json';
 
 const apiKey = process.env.WPT_API_KEY;
-const runs = Number(process.env.WPT_RUNS ?? 3);
+const runs = Number(process.env.WPT_RUNS || 3);
 
 test.describe('Performance budgets', () => {
   test.skip(!apiKey, 'WPT_API_KEY is not set; skipping live WebPageTest runs.');
